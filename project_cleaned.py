@@ -187,7 +187,7 @@ def closenessCentralityUpToYear(graph, act_nodes, year, k = None, epsilon = None
 # In[8]:
 
 
-def topNActorsGivenCentralities(centralities_df, N = 10):
+def topNActorsGivenCentralities(G, centralities_df, N = 10):
     '''
         Given dataframe with a column "centrality" returns the top 10 actors (needed because centrality is calculated for movies, too)
         Arguments: 
@@ -257,7 +257,7 @@ def moviesWithMaxCommonNumActors(graph, mv_nodes):
                         current_max = temp
                         
     print(f"Max: {current_max}")
-    nodes_dt = G.nodes.data(True)
+    nodes_dt = graph.nodes.data(True)
     
     return (nodes_dt[current_solution[0]]['original_name'], nodes_dt[current_solution[1]]['original_name'])
 
@@ -365,6 +365,7 @@ def main():
         
         print("Test 1")
         ## Q2
+        
         data = {}
         for year, epsilon in zip(list(range(1930, 2021, 10)), np.linspace(0.05, 0.3, 10)):
             data[year] = {}
@@ -373,13 +374,12 @@ def main():
             data[year]['year'] = year
             data[year]['centralities'] = centralities
             data[year]['num_samples'] = kappa
-            data[year]['top_ten_actors'] = topNActorsGivenCentralities(centralities, N = 10)
-            break
+            data[year]['top_ten_actors'] = topNActorsGivenCentralities(G, centralities, N = 10)
         
         data_tuples = []
         cc_sizes = [120720, 180786, 234381, 320719, 451610, 632247, 896126, 1303550, 2380266, 2926072]
         it_s = [2.28, 1.36, 1.01, 1.37, 1.90, 2.60, 3.57, 4.85, 8.09, 9.44]
-        i = 0
+        i = 0 
         for item in data:
             record = (data[item]['year'], data[item]['epsilon'], data[item]['num_samples'], cc_sizes[i], it_s[i])
             i+=1
@@ -401,21 +401,9 @@ def main():
         actor_graph, maximum, solution = constructGraphAndFindMaxCollaborationGivenActorsGraph(df)
         maximum, solution, hist = findMaxCollaborationGivenGraph(actor_graph)
         print("Test 4")
-        import matplotlib.pyplot as plt
-        figure(figsize=(8, 6))
-
-        x = range(0,430)
-        y = np.array(hist[0:430])
-        plt.title("Distribution of weights (number of collaborations) for each edge")
-        plt.scatter(x, y, s=4)
-        plt.yscale('log')
-        plt.show() 
 
 
-    # In[38]:
-
-
-    print(maximum)
+    # In[38]
 
 
     # In[ ]:
