@@ -14,3 +14,7 @@ For precalculated output it is suggested to see the file project.ipynb, which wa
 
 For the execution, a .py was exported with the jupyter functionality. 
 The flag q4 allows the user to execute either "question 4" or the other questions; this is because for question 4 another graph is created, and RAM issues can occur. 
+
+- project.ipynb is the file that was used as a workbench
+- project_cleaned.ipynb is a cleaned up and commented version of the work of project.ipynb
+- project_cleaned.py is the python script exported from project_cleaned.ipynb
