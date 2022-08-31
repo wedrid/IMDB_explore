@@ -6,7 +6,7 @@
 
 import pandas as pd
 import networkx as nx
-from tqdm.notebook import tqdm
+from tqdm import tqdm
 import numpy as np
 import random
 import time
@@ -281,6 +281,9 @@ def constructGraphAndFindMaxCollaborationGivenActorsGraph(imdb_df_f):
         sol: tuple of the two actors that collaborated the most
     '''
     actor_graph_dict = imdb_df_f.groupby('movie')['actor'].apply(list).to_dict()
+    actors = imdb_df_f.actor.unique()
+    actor_graph = nx.Graph()
+    actor_graph.add_nodes_from(actors)
     mass = 0
     sol = (None, None)
     #k = 0
@@ -346,10 +349,10 @@ def findMaxCollaborationGivenGraph(gr):
 
 def main():
         
-    q4 = True
+    q4 = False
     # Main for questions 1, 2 and 3
+    df = initDF()
     if not q4:
-        df = initDF()
         G, oriGinal, actor_nodes, movies_nodes, actors_f, movies_f = generateIMDBGraph(df)
         print("Test 0")
         ## Q1
@@ -393,9 +396,7 @@ def main():
     if q4:
         ### Q4 # better to be run independently
         #df = initDF()
-        actors = df.actor.unique()
-        actor_graph = nx.Graph()
-        actor_graph.add_nodes_from(actors)
+        
 
         actor_graph, maximum, solution = constructGraphAndFindMaxCollaborationGivenActorsGraph(df)
         maximum, solution, hist = findMaxCollaborationGivenGraph(actor_graph)
