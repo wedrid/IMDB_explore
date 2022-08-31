@@ -343,78 +343,84 @@ def findMaxCollaborationGivenGraph(gr):
 
 
 ###### MAIN
-q4 = True
-# Main for questions 1, 2 and 3
-if not q4:
-    df = initDF()
-    G, oriGinal, actor_nodes, movies_nodes, actors_f, movies_f = generateIMDBGraph(df)
-    print("Test 0")
-    ## Q1
-    
-    q1_results = []
-    for year in tqdm(range(1930, 2021, 10)):
-        q1_results.append(avgMoviesPerActorUpToYear(G, actor_nodes, movies_nodes, year))
-    q1_df = pd.DataFrame(q1_results).rename(columns={0: "Year", 1: "Average 1", 2: "Average 2"})
-    q1_df.plot.bar(x="Year", y=["Average 1", "Average 2"], title="Average number of movies per year", figsize=(10,8))
-    
-    print("Test 1")
-    ## Q2
-    data = {}
-    for year, epsilon in zip(list(range(1930, 2021, 10)), np.linspace(0.05, 0.3, 10)):
-        data[year] = {}
-        centralities, eps, kappa = closenessCentralityUpToYear(G, actor_nodes, year, epsilon=epsilon)
-        data[year]['epsilon'] = epsilon
-        data[year]['year'] = year
-        data[year]['centralities'] = centralities
-        data[year]['num_samples'] = kappa
-        data[year]['top_ten_actors'] = topNActorsGivenCentralities(centralities, N = 10)
-        break
-    
-    data_tuples = []
-    cc_sizes = [120720, 180786, 234381, 320719, 451610, 632247, 896126, 1303550, 2380266, 2926072]
-    it_s = [2.28, 1.36, 1.01, 1.37, 1.90, 2.60, 3.57, 4.85, 8.09, 9.44]
-    i = 0
-    for item in data:
-        record = (data[item]['year'], data[item]['epsilon'], data[item]['num_samples'], cc_sizes[i], it_s[i])
-        i+=1
-        data_tuples.append(record)
-        print(data[item]['top_ten_actors'])
 
-    data_df = pd.DataFrame(data_tuples).rename(columns={0: "Year", 1: "Epsilon", 2: "Num. Samples", 3: "Largest CC size", 4: "it/s"})
-    print("Test 2")
-    ## Q3
-    result = moviesWithMaxCommonNumActors(G, list(movies_nodes)) #2151046
-    print(result)
-    print("Test 3")
+def main():
+        
+    q4 = True
+    # Main for questions 1, 2 and 3
+    if not q4:
+        df = initDF()
+        G, oriGinal, actor_nodes, movies_nodes, actors_f, movies_f = generateIMDBGraph(df)
+        print("Test 0")
+        ## Q1
+        
+        q1_results = []
+        for year in tqdm(range(1930, 2021, 10)):
+            q1_results.append(avgMoviesPerActorUpToYear(G, actor_nodes, movies_nodes, year))
+        q1_df = pd.DataFrame(q1_results).rename(columns={0: "Year", 1: "Average 1", 2: "Average 2"})
+        q1_df.plot.bar(x="Year", y=["Average 1", "Average 2"], title="Average number of movies per year", figsize=(10,8))
+        
+        print("Test 1")
+        ## Q2
+        data = {}
+        for year, epsilon in zip(list(range(1930, 2021, 10)), np.linspace(0.05, 0.3, 10)):
+            data[year] = {}
+            centralities, eps, kappa = closenessCentralityUpToYear(G, actor_nodes, year, epsilon=epsilon)
+            data[year]['epsilon'] = epsilon
+            data[year]['year'] = year
+            data[year]['centralities'] = centralities
+            data[year]['num_samples'] = kappa
+            data[year]['top_ten_actors'] = topNActorsGivenCentralities(centralities, N = 10)
+            break
+        
+        data_tuples = []
+        cc_sizes = [120720, 180786, 234381, 320719, 451610, 632247, 896126, 1303550, 2380266, 2926072]
+        it_s = [2.28, 1.36, 1.01, 1.37, 1.90, 2.60, 3.57, 4.85, 8.09, 9.44]
+        i = 0
+        for item in data:
+            record = (data[item]['year'], data[item]['epsilon'], data[item]['num_samples'], cc_sizes[i], it_s[i])
+            i+=1
+            data_tuples.append(record)
+            print(data[item]['top_ten_actors'])
 
-if q4:
-    ### Q4 # better to be run independently
-    #df = initDF()
-    actors = df.actor.unique()
-    actor_graph = nx.Graph()
-    actor_graph.add_nodes_from(actors)
+        data_df = pd.DataFrame(data_tuples).rename(columns={0: "Year", 1: "Epsilon", 2: "Num. Samples", 3: "Largest CC size", 4: "it/s"})
+        print("Test 2")
+        ## Q3
+        result = moviesWithMaxCommonNumActors(G, list(movies_nodes)) #2151046
+        print(result)
+        print("Test 3")
 
-    actor_graph, maximum, solution = constructGraphAndFindMaxCollaborationGivenActorsGraph(df)
-    maximum, solution, hist = findMaxCollaborationGivenGraph(actor_graph)
-    print("Test 4")
-    import matplotlib.pyplot as plt
-    figure(figsize=(8, 6))
+    if q4:
+        ### Q4 # better to be run independently
+        #df = initDF()
+        actors = df.actor.unique()
+        actor_graph = nx.Graph()
+        actor_graph.add_nodes_from(actors)
 
-    x = range(0,430)
-    y = np.array(hist[0:430])
-    plt.title("Distribution of weights (number of collaborations) for each edge")
-    plt.scatter(x, y, s=4)
-    plt.yscale('log')
-    plt.show() 
+        actor_graph, maximum, solution = constructGraphAndFindMaxCollaborationGivenActorsGraph(df)
+        maximum, solution, hist = findMaxCollaborationGivenGraph(actor_graph)
+        print("Test 4")
+        import matplotlib.pyplot as plt
+        figure(figsize=(8, 6))
 
-
-# In[38]:
-
-
-print(maximum)
+        x = range(0,430)
+        y = np.array(hist[0:430])
+        plt.title("Distribution of weights (number of collaborations) for each edge")
+        plt.scatter(x, y, s=4)
+        plt.yscale('log')
+        plt.show() 
 
 
-# In[ ]:
+    # In[38]:
+
+
+    print(maximum)
+
+
+    # In[ ]:
+
+if __name__ == "__main__":
+    main()
 
 
 
