@@ -349,7 +349,7 @@ def findMaxCollaborationGivenGraph(gr):
 
 def main():
         
-    q4 = False
+    q4 = True
     # Main for questions 1, 2 and 3
     df = initDF()
     if not q4:
@@ -400,7 +400,8 @@ def main():
 
         actor_graph, maximum, solution = constructGraphAndFindMaxCollaborationGivenActorsGraph(df)
         maximum, solution, hist = findMaxCollaborationGivenGraph(actor_graph)
-        print("Test 4")
+        print(maximum)
+        print(solution)
 
 
     # In[38]
