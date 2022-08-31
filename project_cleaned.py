@@ -387,7 +387,7 @@ def main():
             print(data[item]['top_ten_actors'])
 
         data_df = pd.DataFrame(data_tuples).rename(columns={0: "Year", 1: "Epsilon", 2: "Num. Samples", 3: "Largest CC size", 4: "it/s"})
-        print("Test 2")
+        print("Test 2") 
         ## Q3
         result = moviesWithMaxCommonNumActors(G, list(movies_nodes)) #2151046
         print(result)
