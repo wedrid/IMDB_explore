@@ -12,7 +12,7 @@ import random
 import time
 import pickle 
 # NOTE for tqdm usage, if this file is executed through jupyter leave as is, otherwise the tqdm import has to be changed
-
+# NOTE an executed version can be found in https://github.com/wedrid/IMDB_explore/ (see .ipynb files)
 
 # In[16]:
 
